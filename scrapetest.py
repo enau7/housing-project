@@ -1,16 +1,39 @@
 import scraper as s
 
-url = "https://www.zillow.com/lompoc-ca-93117/"
-sindx1 = '"list-card-price">'
-sindx2 = '</div>'
+def usd_to_int(arr):
+    for i in range(0,len(arr)):
+        arr[i] = arr[i].replace("$","")
+        arr[i] = arr[i].replace(",","")
+        arr[i] = arr[i].replace(" ","")
+        arr[i] = int(arr[i])
+
+def link_process(arr):
+    for i in range(0,len(arr)):
+        arr[i] = "https://www.zillow.com/homedetails/" + arr[i]
+
+class homedata:
+    def __init__(link,prices,taxes):
+        self.link = link
+        self.prices = prices
+        self.taxes = taxes
+
+url = "https://www.zillow.com/browse/homes/ca/santa-barbara-county/93117/27/"
+sindx1 = '"/homedetails/'
+sindx2 = '"'
 banned = ''
     
-subs = s.inscraper(url,sindx1,sindx2,banned).scrape()
-print(subs)
+links = s.inscraper(url,sindx1,sindx2,banned).scrape()
+link_process(links)
+print(links)
 
-for i in range(0,len(subs)):
-    subs[i] = subs[i].replace("$","")
-    subs[i] = subs[i].replace(",","")
-    subs[i] = int(subs[i])
+mindx1 = '<span class="hdp__sc-reo5z7-1 hvBPYp">"'
+mindx2 = '"'
 
-print(subs)
+homes = []
+
+#for k in range(0,len(links)):
+#    history = s.inscraper(links[k],mindx1,mindx2,banned).scrape()
+#    usd_to_int(history)
+#    homes.append(history)
+#
+#print(homes)
