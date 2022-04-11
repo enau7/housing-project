@@ -3,13 +3,13 @@ import zlib
     
 class scraper:
 
-    def __init__(self,url,indexstart,indexend,banned):
+    def __init__(self,url):
         self.url = url
-        self.indexstart = indexstart
-        self.indexend = indexend
-        self.banned = banned
+        self.htmltext = None
 
     def webtext(self):
+        if self.htmltext != None:
+            return self.htmltext
         req_headers = {
             'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8',
             'accept-language': 'en-US,en;q=0.8',
@@ -28,10 +28,10 @@ class scraper:
         try:
             html_bytes = zlib.decompress(html_bytes, 16+zlib.MAX_WBITS)
         except: pass
-        html = html_bytes.decode("utf-8")
-        return(html)
+        self.htmltext = html_bytes.decode("utf-8")
+        return(self.htmltext)
 
-    def scrape(self):
+    def parse(self,indexstart,indexend,banned=""):
         text = self.webtext()
         if text is None:
             return(None)
@@ -39,15 +39,15 @@ class scraper:
         index = 0
         blocked = 0
         while (index != -1):
-            index = text.find(self.indexstart)
+            index = text.find(indexstart)
             if index == -1:
                 break
-            text = text[index+len(self.indexstart):len(text)]
-            index = text.find(self.indexend)
+            text = text[index+len(indexstart):len(text)]
+            index = text.find(indexend)
             if index == -1:
                 break
             word = text[0:(index)]
-            for k in self.banned:
+            for k in banned:
                     if k in word:
                         blocked = 1
             if blocked:

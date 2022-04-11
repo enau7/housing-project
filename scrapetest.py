@@ -16,28 +16,27 @@ def link_process(arr):
         arr[i] = "https://www.zillow.com/homedetails/" + arr[i]
 
 class homedata:
-    def __init__(link,prices,taxes):
+    def __init__(lat, long, prices, taxes, ):
         self.link = link
+        self
         self.prices = prices
         self.taxes = taxes
 
 url = "https://www.zillow.com/browse/homes/ca/santa-barbara-county/93117/27/"
 sindx1 = '"/homedetails/'
 sindx2 = '"'
-banned = ''
-links = s.scraper(url,sindx1,sindx2,banned).scrape()
+links = s.scraper(url).parse(sindx1,sindx2)
 link_process(links)
 print(links)
 
 mindx1 = r'\"taxPaid\":'
 mindx2 = ','
-banned = ''
-
 homes = []
 
 for k in range(0,len(links)):
     time.sleep(2)
-    history = s.scraper(links[k],mindx1,mindx2,banned).scrape()
+    housescraper = s.scraper(links[k])
+    history = housescraper.parse(mindx1,mindx2)
     usd_to_int(history)
     print(history)
     homes.append(history)
