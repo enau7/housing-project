@@ -4,7 +4,7 @@ import zlib
 req_headers = {
             'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8',
             'accept-language': 'en-US,en;q=0.8',
-            'accept-encoding' : 'gzip, deflate, br',
+            'accept-encoding' : 'gzip, deflate',
             'connection' : 'keep-alive',
             'referer' : 'https://www.google.com',
             'upgrade-insecure-requests': '1',
@@ -32,6 +32,11 @@ class scraper:
         self.htmltext = html_bytes.decode("utf-8")
         return(self.htmltext)
 
+    def to_file(self,filename):
+        f = open(filename,"w", encoding="utf-8")
+        f.write(self.webtext())
+        f.close()
+
     def parse(self,indexstart,indexend,banned=""):
         text = self.webtext()
         if text is None:
@@ -56,8 +61,3 @@ class scraper:
             else:
                 data.append(word)
         return(data)
-
-def getCoords(address):
-    url = "https://www.google.com/maps/search/"+address+"/"
-    response = urlopen(url,req_headers)
-    return response.geturl()
